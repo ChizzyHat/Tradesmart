@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeSmart · Summer Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --accent: #00d4aa;
+    --accent2: #f59e0b;
+    --accent3: #6366f1;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --border: #1e2d45;
+    --locked-overlay: rgba(10,14,23,0.65);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,212,170,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 80% 80%, rgba(99,102,241,0.05) 0%, transparent 50%);
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+  /* HEADER */
+  header { text-align: center; padding: 3rem 0 2rem; }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    letter-spacing: 0.04em;
+    line-height: 0.95;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 0.9rem; max-width: 500px; margin: 0 auto; font-weight: 300; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { margin: 1.75rem 0 2.5rem; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .progress-track {
+    height: 6px;
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* RULES BANNER */
+  .rules-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent2);
+    border-radius: 10px;
+    padding: 1.4rem 1.75rem;
+    margin-bottom: 2rem;
+  }
+  .rules-banner h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    color: var(--accent2);
+    margin-bottom: 0.6rem;
+  }
+  .rule { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 0.87rem; margin-bottom: 0.4rem; }
+  .rule:last-child { margin-bottom: 0; }
+  .rule-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent2);
+    background: rgba(245,158,11,0.1);
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* PHASE CARD */
+  .phase {
+    margin-bottom: 1.25rem;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+
+  .phase.locked {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    opacity: 0.7;
+  }
+
+  .phase.unlocked {
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .phase.unlocked:hover { border-color: rgba(0,212,170,0.3); opacity: 1; }
+
+  /* PHASE HEADER */
+  .phase-header {
+    padding: 1.2rem 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .phase.open .phase-header { border-bottom-color: var(--border); }
+  .phase.locked .phase-header { cursor: pointer; }
+
+  .phase-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+    min-width: 2.2rem;
+  }
+  .phase.unlocked .phase-num { color: var(--accent); }
+  .phase.locked .phase-num { color: var(--muted); }
+
+  .phase-meta { flex: 1; }
+  .phase-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+  }
+  .phase.unlocked .phase-title { color: #fff; }
+  .phase.locked .phase-title { color: var(--muted); }
+
+  .phase-weeks {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .phase-right { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+  .phase-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+  .badge-foundation { color: var(--accent3); border-color: var(--accent3); background: rgba(99,102,241,0.08); }
+  .badge-practice   { color: var(--accent);  border-color: var(--accent);  background: rgba(0,212,170,0.08); }
+  .badge-analysis   { color: var(--accent2); border-color: var(--accent2); background: rgba(245,158,11,0.08); }
+  .badge-final      { color: var(--danger);  border-color: var(--danger);  background: rgba(239,68,68,0.08); }
+
+  .lock-icon { font-size: 1rem; color: var(--muted); }
+  .chevron { color: var(--muted); font-size: 0.9rem; transition: transform 0.3s; flex-shrink: 0; }
+  .phase.open .chevron { transform: rotate(180deg); }
+
+  /* PHASE BODY */
+  .phase-body { display: none; padding: 1.4rem 1.6rem; }
+  .phase.open .phase-body { display: block; }
+
+  .phase-intro {
+    color: var(--muted);
+    font-size: 0.86rem;
+    margin-bottom: 1.2rem;
+    font-style: italic;
+    border-left: 2px solid var(--border);
+    padding-left: 0.8rem;
+  }
+
+  /* WEEKS */
+  .week { margin-bottom: 1.2rem; }
+  .week-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .phase.locked .week-label { color: var(--muted); }
+  .week-title { font-weight: 600; font-size: 0.95rem; color: #fff; margin-bottom: 0.45rem; }
+  .phase.locked .week-title { color: var(--muted); }
+
+  .tasks { list-style: none; display: grid; gap: 0.3rem; }
+  .tasks li { font-size: 0.86rem; color: var(--text); padding-left: 1.2rem; position: relative; }
+  .tasks li::before { content: '→'; position: absolute; left: 0; color: var(--muted); font-size: 0.78rem; }
+  .phase.locked .tasks li { color: var(--muted); }
+
+  .week-divider { border: none; border-top: 1px dashed var(--border); margin: 1.1rem 0; }
+
+  /* ADHD TIP */
+  .adhd-tip {
+    background: rgba(99,102,241,0.07);
+    border: 1px solid rgba(99,102,241,0.2);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.83rem;
+    color: #a5b4fc;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .adhd-tip-icon { font-size: 0.95rem; flex-shrink: 0; }
+
+  /* CHECKPOINT */
+  .checkpoint {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent2);
+    border-radius: 10px;
+    padding: 1.2rem 1.4rem;
+    margin-top: 1.4rem;
+  }
+  .checkpoint-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.4rem;
+  }
+  .checkpoint-title { font-weight: 600; font-size: 0.93rem; color: #fff; margin-bottom: 0.7rem; }
+  .checkpoint-items { list-style: none; display: grid; gap: 0.4rem; }
+  .checkpoint-items li { font-size: 0.84rem; display: flex; align-items: flex-start; gap: 0.55rem; }
+  .check-box {
+    width: 15px; height: 15px;
+    border: 1.5px solid var(--accent2);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  /* UNLOCK BUTTON in checkpoint */
+  .unlock-btn-wrap { margin-top: 1.2rem; display: flex; justify-content: flex-end; }
+  .unlock-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(0,212,170,0.1);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .unlock-btn:hover { background: var(--accent); color: #0a0e17; }
+
+  /* LOCKED BANNER */
+  .locked-banner {
+    background: rgba(100,116,139,0.08);
+    border: 1px dashed rgba(100,116,139,0.25);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.84rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  /* FINAL UNLOCK CARD */
+  .unlock-card {
+    background: linear-gradient(135deg, rgba(0,212,170,0.07), rgba(99,102,241,0.07));
+    border: 1px solid rgba(0,212,170,0.25);
+    border-radius: 14px;
+    padding: 2rem;
+    margin-top: 2rem;
+    text-align: center;
+  }
+  .unlock-icon { font-size: 2.2rem; margin-bottom: 0.65rem; }
+  .unlock-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .unlock-card p { color: var(--muted); font-size: 0.87rem; max-width: 500px; margin: 0 auto 1.1rem; }
+  .unlock-conditions { list-style: none; display: grid; gap: 0.45rem; text-align: left; max-width: 460px; margin: 0 auto; }
+  .unlock-conditions li { font-size: 0.86rem; display: flex; gap: 0.7rem; align-items: center; }
+  .unlock-conditions li span:first-child { color: var(--accent); font-size: 0.95rem; }
+
+  .footer-note { text-align: center; margin-top: 3rem; color: var(--muted); font-size: 0.75rem; font-family: 'DM Mono', monospace; }
+
+  /* ---- PASSWORD MODAL ---- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: #161e2e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    transform: translateY(12px);
+    transition: transform 0.25s;
+  }
+  .modal-overlay.visible .modal { transform: translateY(0); }
+
+  .modal-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.4rem;
+  }
+  .modal h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    margin-bottom: 0.35rem;
+  }
+  .modal p { font-size: 0.84rem; color: var(--muted); margin-bottom: 1.25rem; }
+
+  .modal input[type="password"] {
+    width: 100%;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 0.5rem;
+  }
+  .modal input[type="password"]:focus { border-color: var(--accent); }
+  .modal input[type="password"].shake {
+    animation: shake 0.35s ease;
+    border-color: var(--danger);
+  }
+
+  .modal-error {
+    font-size: 0.8rem;
+    color: var(--danger);
+    min-height: 1.2rem;
+    margin-bottom: 0.75rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .modal-buttons { display: flex; gap: 0.6rem; justify-content: flex-end; }
+
+  .btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.73rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+  .btn-primary { background: var(--accent); color: #0a0e17; font-weight: 600; }
+  .btn-primary:hover { background: #00b894; }
+
+  /* ---- CONFETTI CANVAS ---- */
+  #confetti-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 300;
+  }
+
+  /* ---- CELEBRATION TOAST ---- */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(6rem);
+    background: linear-gradient(135deg, #00d4aa, #6366f1);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+    padding: 0.9rem 2.5rem;
+    border-radius: 50px;
+    z-index: 400;
+    transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
+    opacity: 0;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+
+  @media (max-width: 600px) {
+    .phase-header { padding: 1rem 1.1rem; gap: 0.65rem; }
+    .phase-body { padding: 1.1rem; }
+    .phase-num { font-size: 1.65rem; }
+    .phase-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-eyebrow">Parent Verification</div>
+    <h3>Unlock Phase <span id="modal-phase-label"></span></h3>
+    <p>Enter the parent password to confirm this checkpoint has been reviewed and passed.</p>
+    <input type="password" id="modal-pw" placeholder="••••••••" autocomplete="off" />
+    <div class="modal-error" id="modal-error"></div>
+    <div class="modal-buttons">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPassword()">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <header>
+    <div class="eyebrow">10-Week Summer Program</div>
+    <h1>TRADE<span>SMART</span></h1>
+    <p class="subtitle">A structured path from zero to market-ready. No real money until every checkpoint is cleared.</p>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Progress</span>
+      <span id="progress-text">Phase 1 of 5</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:20%"></div>
+    </div>
+  </div>
+
+  <!-- GROUND RULES -->
+  <div class="rules-banner">
+    <h2>The Ground Rules</h2>
+    <div class="rule"><span class="rule-num">01</span><span>No real money until Week 10 -- and only if every checkpoint is passed. Non-negotiable.</span></div>
+    <div class="rule"><span class="rule-num">02</span><span>Sessions can be 15 min or 1 hour. Consistency beats marathon sessions. Five days a week is the target.</span></div>
+    <div class="rule"><span class="rule-num">03</span><span>Trading is not gambling. Anyone who tells you they win every trade is lying. The goal is to win more than you lose, over time.</span></div>
+    <div class="rule"><span class="rule-num">04</span><span>Keep a trading journal from Day 1. Every paper trade gets written down with a reason. No journal, no checkpoint pass.</span></div>
+    <div class="rule"><span class="rule-num">05</span><span>If it feels like gambling, stop. That is your gut telling you something is wrong.</span></div>
+  </div>
+
+  <!-- ===== PHASE 1 ===== -->
+  <div class="phase open unlocked" id="phase-1" data-phase="1">
+    <div class="phase-header" onclick="togglePhase(1)">
+      <div class="phase-num">1</div>
+      <div class="phase-meta">
+        <div class="phase-title">How Markets Actually Work</div>
+        <div class="phase-weeks">Weeks 1 &amp; 2 &nbsp;·&nbsp; Foundation</div>
+      </div>
+      <div class="phase-right">
+        <span class="phase-badge badge-foundation">Foundation</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="phase-body">
+      <p class="phase-intro">Before touching any chart, the goal is to understand what the market actually is -- so it never feels like a mystery machine that spits out money or takes it away randomly.</p>
+
+      <div class="week">
+        <div class="week-label">Week 1</div>
+        <div class="week-title">What Are Stocks, Crypto, and Markets?</div>
+        <ul class="tasks">
+          <li>Learn what a stock is -- you are buying a tiny piece of a company</li>
+          <li>Learn what crypto is -- digital currency with no central bank backing it</li>
+          <li>Understand what "the market" means -- buyers and sellers agreeing on price</li>
+          <li>Set up a free TradingView account and explore the interface for 15 minutes</li>
+          <li>Pick 3 companies you actually know (Apple, Nike, Tesla) and find them on TradingView</li>
+          <li>Watch their price for the week -- just observe, no analysis yet</li>
+        </ul>
+        <div class="adhd-tip"><span class="adhd-tip-icon">⚡</span><span>Short bursts work best. 15 minutes of focused reading beats an hour of zoning out. Set a timer, take a break, come back.</span></div>
+      </div>
+
+      <hr class="week-divider">
+
+      <div class="week">
+        <div class="week-label">Week 2</div>
+        <div class="week-title">Supply, Demand, and Why Prices Move</div>
+        <ul class="tasks">
+          <li>Learn the basic rule: more buyers than sellers = price goes up. More sellers than buyers = price goes down</li>
+          <li>Study one real news event and find it on a chart -- did the price move when the news hit?</li>
+          <li>Learn what a bull market and bear market mean</li>
+          <li>Set up TradingView paper trading account -- start with $20,000 in virtual money</li>
+          <li>Make your first 2 paper trades just to learn the interface. This is practice, not strategy yet.</li>
+        </ul>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint-label">Checkpoint 01 &nbsp;·&nbsp; End of Week 2</div>
+        <div class="checkpoint-title">Before moving to Phase 2, you must be able to:</div>
+        <ul class="checkpoint-items">
+          <li><span class="check-box"></span><span>Explain in your own words what a stock is and what makes its price move</span></li>
+          <li><span class="check-box"></span><span>Find any company on TradingView and pull up its chart</span></li>
+          <li><span class="check-box"></span><span>Have made at least 2 paper trades (no strategy required -- just know how the buttons work)</span></li>
+          <li><span class="check-box"></span><span>Have a trading journal started with at least 5 entries</span></li>
+        </ul>
+        <div class="unlock-btn-wrap">
+          <button class="unlock-btn" onclick="openModal(2)">Parent Unlock Phase 2 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PHASE 2 ===== -->
+  <div class="phase locked" id="phase-2" data-phase="2">
+    <div class="phase-header" onclick="togglePhase(2)">
+      <div class="phase-num">2</div>
+      <div class="phase-meta">
+        <div class="phase-title">Reading Charts Like a Pro</div>
+        <div class="phase-weeks">Weeks 3 &amp; 4 &nbsp;·&nbsp; Technical Basics</div>
+      </div>
+      <div class="phase-right">
+        <span class="phase-badge badge-foundation">Foundation</span>
+        <span class="lock-icon" id="lock-2">🔒</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="phase-body">
+      <div class="locked-banner" id="locked-banner-2">This phase is locked. Complete Phase 1 and have a parent enter the password to continue.</div>
+
+      <p class="phase-intro">Charts are the language of trading. You don't need to know all of them -- just a handful, done well.</p>
+
+      <div class="week">
+        <div class="week-label">Week 3</div>
+        <div class="week-title">Candlestick Charts and Timeframes</div>
+        <ul class="tasks">
+          <li>Learn what a candlestick is -- open, close, high, low on a single period</li>
+          <li>Learn 5 key candlestick patterns: Doji, Hammer, Engulfing (bullish and bearish), Shooting Star</li>
+          <li>Switch between 1-day, 1-week, and 1-hour timeframes on your watched stocks</li>
+          <li>Use TradingView's Bar Replay feature -- travel back 3 months and watch it move forward day by day</li>
+          <li>Journal: write what you notice about patterns before and after price moves</li>
+        </ul>
+        <div class="adhd-tip"><span class="adhd-tip-icon">⚡</span><span>Bar Replay is like a video game. Use it when energy is low -- it keeps you engaged without needing to read.</span></div>
+      </div>
+
+      <hr class="week-divider">
+
+      <div class="week">
+        <div class="week-label">Week 4</div>
+        <div class="week-title">Support, Resistance, and Trend Lines</div>
+        <ul class="tasks">
+          <li>Learn what support is -- a price floor where buyers tend to step in</li>
+          <li>Learn what resistance is -- a price ceiling where sellers tend to push back</li>
+          <li>Draw support and resistance lines on 3 different charts using TradingView's drawing tools</li>
+          <li>Learn what a trend line is and draw one on an uptrend and one on a downtrend</li>
+          <li>Make 5 paper trades this week based only on what you see on the chart. Journal every one with a reason.</li>
+        </ul>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint-label">Checkpoint 02 &nbsp;·&nbsp; End of Week 4</div>
+        <div class="checkpoint-title">Before moving to Phase 3, you must be able to:</div>
+        <ul class="checkpoint-items">
+          <li><span class="check-box"></span><span>Read a candlestick chart and identify at least 3 of the 5 patterns by sight</span></li>
+          <li><span class="check-box"></span><span>Draw a support line, resistance line, and trend line on any chart</span></li>
+          <li><span class="check-box"></span><span>Have completed at least 10 total paper trades with journal entries explaining why</span></li>
+          <li><span class="check-box"></span><span>Used Bar Replay on at least 2 different stocks</span></li>
+        </ul>
+        <div class="unlock-btn-wrap">
+          <button class="unlock-btn" onclick="openModal(3)">Parent Unlock Phase 3 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PHASE 3 ===== -->
+  <div class="phase locked" id="phase-3" data-phase="3">
+    <div class="phase-header" onclick="togglePhase(3)">
+      <div class="phase-num">3</div>
+      <div class="phase-meta">
+        <div class="phase-title">Tools and Indicators</div>
+        <div class="phase-weeks">Weeks 5 &amp; 6 &nbsp;·&nbsp; Going Deeper</div>
+      </div>
+      <div class="phase-right">
+        <span class="phase-badge badge-practice">Practice</span>
+        <span class="lock-icon" id="lock-3">🔒</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="phase-body">
+      <div class="locked-banner" id="locked-banner-3">This phase is locked. Complete Phase 2 and have a parent enter the password to continue.</div>
+
+      <p class="phase-intro">Indicators help you confirm what you think you see on a chart. The trap most new traders fall into is using too many. Pick two or three and learn them well.</p>
+
+      <div class="week">
+        <div class="week-label">Week 5</div>
+        <div class="week-title">Moving Averages and Volume</div>
+        <ul class="tasks">
+          <li>Learn what a moving average is -- the average price over a set period (e.g. 50 days)</li>
+          <li>Add the 20-day and 50-day moving averages to a chart on TradingView</li>
+          <li>Learn what a "golden cross" and "death cross" are</li>
+          <li>Learn what volume tells you -- high volume on a move means more conviction</li>
+          <li>This week: only trade stocks where volume confirms the move you think you see</li>
+        </ul>
+        <div class="adhd-tip"><span class="adhd-tip-icon">⚡</span><span>Set a rule: no more than 2 indicators on a chart at once. More clutter = more confusion = worse decisions.</span></div>
+      </div>
+
+      <hr class="week-divider">
+
+      <div class="week">
+        <div class="week-label">Week 6</div>
+        <div class="week-title">RSI and MACD -- Your Two Best Friends</div>
+        <ul class="tasks">
+          <li>Learn RSI -- above 70 means possibly overbought, below 30 means possibly oversold</li>
+          <li>Learn MACD -- a momentum indicator showing when trends may be gaining or losing strength</li>
+          <li>Add both to a chart and practice spotting buy and sell signals</li>
+          <li>Do a "look-back" exercise: hide the right half of a chart, predict what happened next, then reveal the answer</li>
+          <li>Make 10 paper trades this week combining everything learned so far</li>
+        </ul>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint-label">Checkpoint 03 &nbsp;·&nbsp; End of Week 6 &nbsp;·&nbsp; Midpoint Review</div>
+        <div class="checkpoint-title">This one matters a lot -- midpoint gut-check:</div>
+        <ul class="checkpoint-items">
+          <li><span class="check-box"></span><span>Explain RSI and MACD in plain English, no jargon</span></li>
+          <li><span class="check-box"></span><span>Show the journal: at least 25 paper trades with documented reasons</span></li>
+          <li><span class="check-box"></span><span>Together review the trades -- what % were winners? What patterns are in the losers?</span></li>
+          <li><span class="check-box"></span><span>Pass the look-back test: correctly identify trend direction on 3 out of 5 blind charts</span></li>
+        </ul>
+        <div class="unlock-btn-wrap">
+          <button class="unlock-btn" onclick="openModal(4)">Parent Unlock Phase 4 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PHASE 4 ===== -->
+  <div class="phase locked" id="phase-4" data-phase="4">
+    <div class="phase-header" onclick="togglePhase(4)">
+      <div class="phase-num">4</div>
+      <div class="phase-meta">
+        <div class="phase-title">Risk Management and Strategy</div>
+        <div class="phase-weeks">Weeks 7 &amp; 8 &nbsp;·&nbsp; The Real Lesson</div>
+      </div>
+      <div class="phase-right">
+        <span class="phase-badge badge-analysis">Analysis</span>
+        <span class="lock-icon" id="lock-4">🔒</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="phase-body">
+      <div class="locked-banner" id="locked-banner-4">This phase is locked. Complete Phase 3 and have a parent enter the password to continue.</div>
+
+      <p class="phase-intro">This is the phase most people skip -- and the reason most people lose money. Good traders are not the ones who pick the most winners. They control how much they lose when they are wrong.</p>
+
+      <div class="week">
+        <div class="week-label">Week 7</div>
+        <div class="week-title">Stop Losses, Position Sizing, and Risk/Reward</div>
+        <ul class="tasks">
+          <li>Learn what a stop loss is -- an automatic exit if the trade goes against you</li>
+          <li>Learn the 1% rule: never risk more than 1% of your account on a single trade</li>
+          <li>Learn risk/reward ratio -- if you risk $1, aim to make at least $2</li>
+          <li>Go back and review your paper trade journal -- how many trades had no defined exit plan?</li>
+          <li>From this week forward: every paper trade must have a stop loss and a target price set before entering</li>
+        </ul>
+        <div class="adhd-tip"><span class="adhd-tip-icon">⚡</span><span>The stop loss is not admitting defeat. It is a superpower. It means one bad trade can never ruin your whole account.</span></div>
+      </div>
+
+      <hr class="week-divider">
+
+      <div class="week">
+        <div class="week-label">Week 8</div>
+        <div class="week-title">Building YOUR Strategy</div>
+        <ul class="tasks">
+          <li>Review your best and worst paper trades from the whole summer</li>
+          <li>Write a simple trading plan: what will you look for before entering? What makes you exit?</li>
+          <li>Decide: stocks or crypto? Pick one. Crypto moves faster but is far more volatile.</li>
+          <li>Trade for a full week following only your written plan. No improvising.</li>
+          <li>At week end: did following the plan feel different from winging it?</li>
+        </ul>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint-label">Checkpoint 04 &nbsp;·&nbsp; End of Week 8</div>
+        <div class="checkpoint-title">The hardest checkpoint -- risk management:</div>
+        <ul class="checkpoint-items">
+          <li><span class="check-box"></span><span>Every paper trade from Week 7 onward has a documented stop loss and price target</span></li>
+          <li><span class="check-box"></span><span>Can explain risk/reward ratio without looking it up</span></li>
+          <li><span class="check-box"></span><span>Has a written, one-page trading plan with entry rules, exit rules, and risk per trade</span></li>
+          <li><span class="check-box"></span><span>Has chosen stocks or crypto and can explain why</span></li>
+        </ul>
+        <div class="unlock-btn-wrap">
+          <button class="unlock-btn" onclick="openModal(5)">Parent Unlock Phase 5 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PHASE 5 ===== -->
+  <div class="phase locked" id="phase-5" data-phase="5">
+    <div class="phase-header" onclick="togglePhase(5)">
+      <div class="phase-num">5</div>
+      <div class="phase-meta">
+        <div class="phase-title">Prove It: The Final Test</div>
+        <div class="phase-weeks">Weeks 9 &amp; 10 &nbsp;·&nbsp; Earning the Key</div>
+      </div>
+      <div class="phase-right">
+        <span class="phase-badge badge-final">Real Money Gate</span>
+        <span class="lock-icon" id="lock-5">🔒</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="phase-body">
+      <div class="locked-banner" id="locked-banner-5">This phase is locked. Complete Phase 4 and have a parent enter the password to continue.</div>
+
+      <p class="phase-intro">The last two weeks are a live simulation. Full rules, full discipline, full journal. This is not about making money -- it is about proving the habits are there before real money is on the line.</p>
+
+      <div class="week">
+        <div class="week-label">Weeks 9 &amp; 10</div>
+        <div class="week-title">Two-Week Live Simulation</div>
+        <ul class="tasks">
+          <li>Trade paper money every market day using only your written trading plan</li>
+          <li>Log every single trade: entry, exit, stop loss, target, and outcome</li>
+          <li>Do not skip days. Consistency is what you are proving.</li>
+          <li>End of each week: review trades together as a parent-child debrief</li>
+          <li>Calculate your win rate and average risk/reward for the two weeks</li>
+          <li>Write a short summary: what did you learn? What would you do differently?</li>
+        </ul>
+        <div class="adhd-tip"><span class="adhd-tip-icon">⚡</span><span>This is the hardest part because it feels the most like a job. That is the point. Trading is a skill, not a shortcut.</span></div>
+      </div>
+
+      <div class="checkpoint">
+        <div class="checkpoint-label">Final Checkpoint &nbsp;·&nbsp; End of Week 10 &nbsp;·&nbsp; The Real Money Gate</div>
+        <div class="checkpoint-title">ALL of these must be met before any real money account is opened:</div>
+        <ul class="checkpoint-items">
+          <li><span class="check-box"></span><span>10+ days of consistent paper trading with a full journal</span></li>
+          <li><span class="check-box"></span><span>Win rate of at least 40% (4 wins out of 10 with good risk management is profitable)</span></li>
+          <li><span class="check-box"></span><span>Average risk/reward of at least 1:1.5 or better across all trades</span></li>
+          <li><span class="check-box"></span><span>Written trading plan is complete and has been followed for 2 full weeks</span></li>
+          <li><span class="check-box"></span><span>Can explain each trade and why to a parent -- no vague answers</span></li>
+          <li><span class="check-box"></span><span>Agrees in writing to start with a maximum of $200 and strict stop-loss discipline</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL UNLOCK CARD - hidden until phase 5 complete -->
+  <div class="unlock-card" id="final-card" style="display:none;">
+    <div class="unlock-icon">🔓</div>
+    <h2>All 5 Checkpoints Cleared</h2>
+    <p>A small real-money account gets opened together -- with clear rules, a set starting amount, and full parental visibility. The summer earned the right to try the real thing.</p>
+    <ul class="unlock-conditions">
+      <li><span>✓</span><span>Start with a small, agreed amount (suggested: $100 to $200)</span></li>
+      <li><span>✓</span><span>Use only the broker you both research and agree on together</span></li>
+      <li><span>✓</span><span>Same trading plan from paper trading -- no changing the rules</span></li>
+      <li><span>✓</span><span>Weekly check-ins continue after the program ends</span></li>
+      <li><span>✓</span><span>If 3 consecutive losing weeks occur, back to paper trading for 2 weeks minimum</span></li>
+    </ul>
+  </div>
+
+  <div class="footer-note">TradeSmart &nbsp;·&nbsp; Summer 2026 &nbsp;·&nbsp; Built for a 15-year-old who earned it</div>
+
+</div>
+
+<script>
+// ============================================================
+//  CONFIG -- change the password here
+// ============================================================
+const PARENT_PASSWORD = "tradesmartdad";
+
+// ============================================================
+//  STATE
+// ============================================================
+const STORAGE_KEY = "tradesmartUnlocked";
+
+function getUnlocked() {
+  try {
+    const val = localStorage.getItem(STORAGE_KEY);
+    return val ? JSON.parse(val) : [1];
+  } catch(e) { return [1]; }
+}
+
+function saveUnlocked(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+
+// ============================================================
+//  PHASE RENDERING
+// ============================================================
+function applyState() {
+  const unlocked = getUnlocked();
+  const maxUnlocked = Math.max(...unlocked);
+
+  for (let i = 1; i <= 5; i++) {
+    const phase = document.getElementById("phase-" + i);
+    const banner = document.getElementById("locked-banner-" + i);
+    const lockIcon = document.getElementById("lock-" + i);
+
+    if (unlocked.includes(i)) {
+      phase.classList.remove("locked");
+      phase.classList.add("unlocked");
+      if (banner) banner.style.display = "none";
+      if (lockIcon) lockIcon.textContent = "✅";
+    } else {
+      phase.classList.add("locked");
+      phase.classList.remove("unlocked");
+      if (banner) banner.style.display = "block";
+      if (lockIcon) lockIcon.textContent = "🔒";
+    }
+  }
+
+  // Progress bar
+  const pct = (maxUnlocked / 5) * 100;
+  document.getElementById("progress-fill").style.width = pct + "%";
+  document.getElementById("progress-text").textContent = "Phase " + maxUnlocked + " of 5";
+
+  // Final card
+  if (maxUnlocked >= 5) {
+    document.getElementById("final-card").style.display = "block";
+  }
+}
+
+function togglePhase(num) {
+  const phase = document.getElementById("phase-" + num);
+  const isOpen = phase.classList.contains("open");
+  // Close all
+  document.querySelectorAll(".phase").forEach(p => p.classList.remove("open"));
+  if (!isOpen) phase.classList.add("open");
+}
+
+// ============================================================
+//  MODAL
+// ============================================================
+let targetPhase = null;
+
+function openModal(phaseToUnlock) {
+  const unlocked = getUnlocked();
+  if (unlocked.includes(phaseToUnlock)) {
+    showToast("Phase " + phaseToUnlock + " is already unlocked!");
+    return;
+  }
+
+  targetPhase = phaseToUnlock;
+  document.getElementById("modal-phase-label").textContent = phaseToUnlock;
+  document.getElementById("modal-pw").value = "";
+  document.getElementById("modal-error").textContent = "";
+  document.getElementById("modal-overlay").classList.add("visible");
+  setTimeout(() => document.getElementById("modal-pw").focus(), 200);
+}
+
+function closeModal() {
+  document.getElementById("modal-overlay").classList.remove("visible");
+  targetPhase = null;
+}
+
+function submitPassword() {
+  const input = document.getElementById("modal-pw");
+  const val = input.value;
+
+  if (val === PARENT_PASSWORD) {
+    const unlocked = getUnlocked();
+    if (!unlocked.includes(targetPhase)) {
+      unlocked.push(targetPhase);
+      saveUnlocked(unlocked);
+    }
+    closeModal();
+    applyState();
+
+    // Open the newly unlocked phase
+    setTimeout(() => {
+      document.querySelectorAll(".phase").forEach(p => p.classList.remove("open"));
+      const newPhase = document.getElementById("phase-" + targetPhase);
+      newPhase.classList.add("open");
+      newPhase.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+
+    // Celebrate
+    setTimeout(() => celebrate(targetPhase), 300);
+
+  } else {
+    document.getElementById("modal-error").textContent = "Incorrect password. Try again.";
+    input.classList.add("shake");
+    setTimeout(() => input.classList.remove("shake"), 400);
+    input.value = "";
+    input.focus();
+  }
+}
+
+// Allow Enter key in password field
+document.getElementById("modal-pw").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") submitPassword();
+  if (e.key === "Escape") closeModal();
+});
+
+// Click outside modal to close
+document.getElementById("modal-overlay").addEventListener("click", function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ============================================================
+//  CONFETTI CELEBRATION
+// ============================================================
+const messages = [
+  "CHECKPOINT CLEARED!",
+  "PHASE UNLOCKED!",
+  "LEVEL UP!",
+  "LET'S GO!",
+  "KEEP GRINDING!"
+];
+
+function celebrate(phaseNum) {
+  const msg = phaseNum === 5 ? "REAL MONEY UNLOCKED!" : messages[phaseNum - 1] || "PHASE UNLOCKED!";
+  showToast(msg);
+  launchConfetti();
+}
+
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3200);
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ["#00d4aa","#f59e0b","#6366f1","#ef4444","#fff","#34d399","#f472b6"];
+  const pieces = [];
+  const count = 140;
+
+  for (let i = 0; i < count; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 10 + 5,
+      h: Math.random() * 5 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360,
+      rotV: (Math.random() - 0.5) * 6,
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 4 + 2,
+      alpha: 1
+    });
+  }
+
+  let frame = 0;
+  const maxFrames = 160;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rotV;
+      if (frame > maxFrames * 0.6) p.alpha -= 0.025;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// ============================================================
+//  BOOT
+// ============================================================
+applyState();
+
+// Phase 1 open by default; if higher phases are unlocked, open the latest
+(function() {
+  const unlocked = getUnlocked();
+  const max = Math.max(...unlocked);
+  if (max > 1) {
+    document.querySelectorAll(".phase").forEach(p => p.classList.remove("open"));
+    document.getElementById("phase-" + max).classList.add("open");
+  }
+})();
+</script>
+</body>
+</html>
